@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
-class Listener implements StatusListener {
+class Listener extends AbstractStatusListener {
 
     private static final Logger LOGGER = Logger.getLogger(Listener.class);
 
@@ -52,33 +52,7 @@ class Listener implements StatusListener {
         }
     }
 
-    @Override
-    public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-
-    }
-
-    @Override
-    public void onTrackLimitationNotice(int i) {
-        LOGGER.warn("Track Limitation happened: " + i);
-    }
-
-    @Override
-    public void onScrubGeo(long l, long l1) {
-
-    }
-
-    @Override
-    public void onStallWarning(StallWarning stallWarning) {
-        LOGGER.warn("Stall happened : ", stallWarning.getMessage());
-
-    }
-
-    @Override
-    public void onException(Exception e) {
-        LOGGER.warn("Exception happened", e);
-    }
-
-    void reply(Status status) {
+     void reply(Status status) {
 
         StringBuilder update = new StringBuilder();
         update.append(statuses.getNextText());
