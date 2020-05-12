@@ -20,6 +20,6 @@ public class CategoriserTest {
     public void testCategorise() throws Exception {
         String category =
                 categoriser.categorise("sindicalistas mafiosos que viven de AA ");
-        assertThat(category).isEqualTo("American");
+        assertThat(category).isEqualTo("Otro");
     }
 }
