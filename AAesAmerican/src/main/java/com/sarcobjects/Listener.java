@@ -29,22 +29,26 @@ class Listener implements StatusListener {
     @Override
     public void onStatus(Status status) {
 
-        if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
-            String text = status.getText();
-            if (status.getQuotedStatus() != null) {
-                text += "|" + status.getQuotedStatus().getText();
-            }
-            String country = "Unknown";
-            if (nonNull(status.getPlace())) {
-                country = status.getPlace().getCountry();
-            }
-            LOGGER.info(format("%n%nFrom: %s Country: %s Text: %s", status.getUser().getScreenName(),
-                    country, "Unknown"), text);
-            //if (CATEGORY.equalsIgnoreCase(categoriser.categorise(text))) {
+        try {
+            if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
+                String text = status.getText();
+                if (status.getQuotedStatus() != null) {
+                    text += "|" + status.getQuotedStatus().getText();
+                }
+                String country = "Unknown";
+                if (nonNull(status.getPlace())) {
+                    country = status.getPlace().getCountry();
+                }
+                LOGGER.info(format("%n%nFrom: %s Country: %s Text: %s", status.getUser().getScreenName(),
+                        country, "Unknown"), text);
+                //if (CATEGORY.equalsIgnoreCase(categoriser.categorise(text))) {
 
                 LOGGER.info("REPLYING =====>");
                 reply(status);
-            //}
+                //}
+            }
+        } catch (Exception e) {
+            LOGGER.warn("Error receiving status", e);
         }
     }
 
@@ -55,7 +59,7 @@ class Listener implements StatusListener {
 
     @Override
     public void onTrackLimitationNotice(int i) {
-
+        LOGGER.warn("Track Limitation happened: " + i);
     }
 
     @Override
@@ -65,12 +69,13 @@ class Listener implements StatusListener {
 
     @Override
     public void onStallWarning(StallWarning stallWarning) {
+        LOGGER.warn("Stall happened : ", stallWarning.getMessage());
 
     }
 
     @Override
     public void onException(Exception e) {
-
+        LOGGER.warn("Exception happened", e);
     }
 
     void reply(Status status) {
