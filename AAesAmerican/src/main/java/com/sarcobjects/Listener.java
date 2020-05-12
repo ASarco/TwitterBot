@@ -97,7 +97,7 @@ class Listener implements StatusListener {
         try {
             twitter.updateStatus(statusUpdate);
         } catch (TwitterException e) {
-            e.printStackTrace();
+            LOGGER.warn("Twitter exception", e);
         }
     }
 
