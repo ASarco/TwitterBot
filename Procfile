@@ -1,0 +1,1 @@
+worker: java -jar target/$PATH_TO_JAR
