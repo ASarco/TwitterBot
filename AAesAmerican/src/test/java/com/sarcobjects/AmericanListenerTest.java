@@ -9,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 
-public class ListenerTest {
+public class AmericanListenerTest {
 
     @Mock
     Twitter twitter;
@@ -18,7 +18,7 @@ public class ListenerTest {
     @Captor
     ArgumentCaptor<StatusUpdate> statusUpdate;
     @InjectMocks
-    Listener listener;
+    AmericanListener americanListener;
 
     @Before
     public void setUp() {
@@ -39,11 +39,11 @@ public class ListenerTest {
         UserMentionEntity[] userMentionEntities = {userMentionEntity};
 
         when(status.getUserMentionEntities()).thenReturn(userMentionEntities);
-        when(status.getInReplyToScreenName()).thenReturn(Listener.MY_USER_NAME);
+        when(status.getInReplyToScreenName()).thenReturn(AmericanListener.MY_USER_NAME);
         when(status.getId()).thenReturn(424242L);
         when(status.getUser()).thenReturn(user);
 
-        listener.reply(status);
+        americanListener.reply(status);
 
         verify(twitter).updateStatus(statusUpdate.capture());
 
@@ -62,17 +62,17 @@ public class ListenerTest {
         UserMentionEntity[] userMentionEntities = {};
 
         when(status.getUserMentionEntities()).thenReturn(userMentionEntities);
-        when(status.getInReplyToScreenName()).thenReturn(Listener.MY_USER_NAME);
+        when(status.getInReplyToScreenName()).thenReturn(AmericanListener.MY_USER_NAME);
         when(status.getId()).thenReturn(424242L);
         when(status.getUser()).thenReturn(user);
 
-        listener.reply(status);
-        listener.reply(status);
-        listener.reply(status);
-        listener.reply(status);
-        listener.reply(status);
-        listener.reply(status);
-        listener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
+        americanListener.reply(status);
 
         verify(twitter, times(7)).updateStatus(statusUpdate.capture());
 

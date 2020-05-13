@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
-class Listener extends AbstractStatusListener {
+class AmericanListener extends AbstractStatusListener {
 
-    private static final Logger LOGGER = Logger.getLogger(Listener.class);
+    private static final Logger LOGGER = Logger.getLogger(AmericanListener.class);
 
     static final String MY_USER_NAME = "aesamerican";
     static final String CATEGORY = "American";
@@ -20,9 +20,9 @@ class Listener extends AbstractStatusListener {
     private final CircularBuffer statuses;
     private final Categoriser categoriser;
 
-    public Listener(Twitter twitter) throws IOException {
+    public AmericanListener(Twitter twitter, CircularBuffer statuses) throws IOException {
         this.twitter = twitter;
-        this.statuses = new CircularBuffer();
+        this.statuses = statuses;
         this.categoriser = new Categoriser("/es-doccat.bin");
     }
 

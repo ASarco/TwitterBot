@@ -7,23 +7,24 @@ import twitter4j.Twitter;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class Listener extends AbstractStatusListener {
+public class TowerBridgeListener extends AbstractStatusListener {
 
-    private static final Logger LOGGER = Logger.getLogger(Listener.class);
+    private static final Logger LOGGER = Logger.getLogger(TowerBridgeListener.class);
 
 
     static final String MY_USER_NAME = "TowerThis";
 
     private final Twitter twitter;
-    //private final CircularBuffer statuses;
+    private final Map<String, CircularBuffer> statuses;
 
-    public Listener(Twitter twitter) {
-
+    public TowerBridgeListener(Twitter twitter, Map<String, CircularBuffer> statuses) {
         this.twitter = twitter;
+        this.statuses = statuses;
     }
 
     @Override
@@ -34,13 +35,12 @@ public class Listener extends AbstractStatusListener {
                 if (status.getQuotedStatus() != null) {
                     text += "|" + status.getQuotedStatus().getText();
                 }
-                LOGGER.info(format("%n%nFrom: %s Lang: %s Text: %s", status.getUser().getScreenName(), status.getLang(), text));
-                MediaEntity[] mediaEntities = status.getMediaEntities();
-                List<String> images = Arrays.stream(mediaEntities)
+                LOGGER.info(format("From: %s Lang: %s Text: %s", status.getUser().getScreenName(), status.getLang(), text));
+                List<String> images = Arrays.stream(status.getMediaEntities())
                         .filter(mediaEntity -> "photo".equals(mediaEntity.getType()))
                         .map(MediaEntity::getMediaURL)
                         .collect(Collectors.toList());
-                LOGGER.info("Contains images " + images);
+                LOGGER.info(format("Contains images %s %n",  images));
                 if (!images.isEmpty()) {
                     verifyImages(images);
                     reply(status);
@@ -55,7 +55,8 @@ public class Listener extends AbstractStatusListener {
     }
 
     private void reply(Status status) {
-        LOGGER.info("REPLYING =====>");
+        String msg = statuses.get(status.getLang()).getNextText();
+        LOGGER.info("REPLYING =====> " + msg);
 
     }
 }
