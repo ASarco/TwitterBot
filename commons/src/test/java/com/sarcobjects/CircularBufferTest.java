@@ -2,8 +2,6 @@ package com.sarcobjects;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -11,12 +9,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CircularBufferTest {
 
-    @InjectMocks
     CircularBuffer circularBuffer;
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        circularBuffer = new CircularBuffer(List.of("AA es American Airlines, AR es Aerolíneas Argentinas",
+                "AR es Aerolíneas Argentinas, AA es American Airlines",
+                "American Airlines es AA, Aerolíneas Argentinas es AR",
+                "Aerolíneas Argentinas es AR, American Airlines es AA",
+                "Código de Aerolíneas Argentinas: AR, Código de American Airlines: AA",
+                "Código de American Airlines: AA, Código de Aerolíneas Argentinas: AR"));
     }
 
     @Test
