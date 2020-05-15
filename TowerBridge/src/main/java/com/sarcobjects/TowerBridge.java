@@ -25,7 +25,7 @@ public class TowerBridge {
 
     }
 
-    private void start() {
+    private void start() throws IOException {
         TwitterStream twitterStream = TwitterStreamFactory.getSingleton();
         Twitter twitter = TwitterFactory.getSingleton();
 
@@ -33,7 +33,7 @@ public class TowerBridge {
                 "en", new CircularBuffer(TEXTS_LIST_EN),
                 "es", new CircularBuffer(TEXTS_LIST_ES));
 
-        twitterStream.addListener(new TowerBridgeListener(twitter, statuses));
+        twitterStream.addListener(new TowerBridgeListener(twitter, statuses, new ImageIdentifier()));
         FilterQuery filterQuery = new FilterQuery()
                 .language(String.join(",", statuses.keySet()))
                 .track("london bridge,londonbridge,puente londres,puentedelondres");

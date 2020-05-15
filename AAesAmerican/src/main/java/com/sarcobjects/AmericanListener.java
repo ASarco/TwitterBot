@@ -1,10 +1,10 @@
 package com.sarcobjects;
 
-import twitter4j.*;
+import twitter4j.Logger;
+import twitter4j.Status;
+import twitter4j.Twitter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
@@ -16,12 +16,11 @@ class AmericanListener extends AbstractStatusListener {
     static final String MY_USER_NAME = "aesamerican";
     static final String CATEGORY = "American";
 
-    private final Twitter twitter;
     private final CircularBuffer statuses;
     private final Categoriser categoriser;
 
     public AmericanListener(Twitter twitter, CircularBuffer statuses) throws IOException {
-        this.twitter = twitter;
+        super(twitter);
         this.statuses = statuses;
         this.categoriser = new Categoriser("/es-doccat.bin");
     }
@@ -44,7 +43,7 @@ class AmericanListener extends AbstractStatusListener {
                 //if (CATEGORY.equalsIgnoreCase(categoriser.categorise(text))) {
 
                 LOGGER.info("REPLYING =====>");
-                reply(status);
+                reply(status, statuses.getNextText());
                 //}
             }
         } catch (Exception e) {
@@ -52,27 +51,6 @@ class AmericanListener extends AbstractStatusListener {
         }
     }
 
-     void reply(Status status) {
 
-        StringBuilder update = new StringBuilder();
-        update.append(statuses.getNextText());
-        update.append(" @").append(status.getUser().getScreenName());
-
-        UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
-        String mentions = Arrays.stream(userMentionEntities)
-                .map(UserMentionEntity::getScreenName)
-                .map(name -> "@" + name)
-                .collect(Collectors.joining(" ", " ", ""));
-        update.append(mentions);
-
-        StatusUpdate statusUpdate = new StatusUpdate(update.toString());
-        statusUpdate.autoPopulateReplyMetadata(true);
-        statusUpdate.setInReplyToStatusId(status.getId());
-        try {
-            twitter.updateStatus(statusUpdate);
-        } catch (TwitterException e) {
-            LOGGER.warn("Twitter exception", e);
-        }
-    }
 
 }

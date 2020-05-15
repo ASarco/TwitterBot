@@ -1,13 +1,42 @@
 package com.sarcobjects;
 
-import twitter4j.Logger;
-import twitter4j.StallWarning;
-import twitter4j.StatusDeletionNotice;
-import twitter4j.StatusListener;
+import twitter4j.*;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public abstract class AbstractStatusListener implements StatusListener {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractStatusListener.class);
+
+    final Twitter twitter;
+
+
+    public AbstractStatusListener(Twitter twitter) {
+        this.twitter = twitter;
+    }
+
+    void reply(Status status, String reply) {
+        LOGGER.info("Replying ====> " + reply);
+        StringBuilder update = new StringBuilder(reply);
+        update.append(" @").append(status.getUser().getScreenName());
+
+        UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
+        String mentions = Arrays.stream(userMentionEntities)
+                .map(UserMentionEntity::getScreenName)
+                .map(name -> "@" + name)
+                .collect(Collectors.joining(" ", " ", ""));
+        update.append(mentions);
+
+        StatusUpdate statusUpdate = new StatusUpdate(update.toString());
+        statusUpdate.autoPopulateReplyMetadata(true);
+        statusUpdate.setInReplyToStatusId(status.getId());
+        try {
+            twitter.updateStatus(statusUpdate);
+        } catch (TwitterException e) {
+            LOGGER.warn("Twitter exception", e);
+        }
+    }
 
 
     @Override

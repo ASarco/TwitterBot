@@ -43,7 +43,7 @@ public class AmericanListenerTest {
         when(status.getId()).thenReturn(424242L);
         when(status.getUser()).thenReturn(user);
 
-        americanListener.reply(status);
+        americanListener.reply(status, "AA es American Airlines, AR es Aerolíneas Argentinas");
 
         verify(twitter).updateStatus(statusUpdate.capture());
 
@@ -66,13 +66,13 @@ public class AmericanListenerTest {
         when(status.getId()).thenReturn(424242L);
         when(status.getUser()).thenReturn(user);
 
-        americanListener.reply(status);
-        americanListener.reply(status);
-        americanListener.reply(status);
-        americanListener.reply(status);
-        americanListener.reply(status);
-        americanListener.reply(status);
-        americanListener.reply(status);
+        americanListener.reply(status, "AA es American Airlines, AR es Aerolíneas Argentinas");
+        americanListener.reply(status, "AR es Aerolíneas Argentinas, AA es American Airlines");
+        americanListener.reply(status, "American Airlines es AA, Aerolíneas Argentinas es AR");
+        americanListener.reply(status, "Aerolíneas Argentinas es AR, American Airlines es AA");
+        americanListener.reply(status, "Código de Aerolíneas Argentinas: AR, Código de American Airlines: AA");
+        americanListener.reply(status, "Código de American Airlines: AA, Código de Aerolíneas Argentinas: AR");
+        americanListener.reply(status, "AA es American Airlines, AR es Aerolíneas Argentinas");
 
         verify(twitter, times(7)).updateStatus(statusUpdate.capture());
 
@@ -88,5 +88,3 @@ public class AmericanListenerTest {
                         tuple(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName "));
     }
 }
-
-//Generated with love by TestMe :) Please report issues and submit feature requests at: http://weirddev.com/forum#!/testme

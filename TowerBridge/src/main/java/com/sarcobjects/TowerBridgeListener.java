@@ -19,44 +19,43 @@ public class TowerBridgeListener extends AbstractStatusListener {
 
     static final String MY_USER_NAME = "TowerThis";
 
-    private final Twitter twitter;
     private final Map<String, CircularBuffer> statuses;
+    private final ImageIdentifier imageIdentifier;
 
-    public TowerBridgeListener(Twitter twitter, Map<String, CircularBuffer> statuses) {
-        this.twitter = twitter;
+
+    public TowerBridgeListener(Twitter twitter, Map<String, CircularBuffer> statuses, ImageIdentifier imageIdentifier) {
+        super(twitter);
         this.statuses = statuses;
+        this.imageIdentifier = imageIdentifier;
     }
 
     @Override
     public void onStatus(Status status) {
         try {
-            if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
-                String text = status.getText();
-                if (status.getQuotedStatus() != null) {
-                    text += "|" + status.getQuotedStatus().getText();
-                }
-                LOGGER.info(format("From: %s Lang: %s Text: %s", status.getUser().getScreenName(), status.getLang(), text));
-                List<String> images = Arrays.stream(status.getMediaEntities())
-                        .filter(mediaEntity -> "photo".equals(mediaEntity.getType()))
-                        .map(MediaEntity::getMediaURL)
-                        .collect(Collectors.toList());
-                LOGGER.info(format("Contains images %s %n",  images));
-                if (!images.isEmpty()) {
-                    verifyImages(images);
-                    reply(status);
+            if (MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) || status.isRetweet()) {
+                return;
+            }
+            String text = status.getText();
+            if (status.getQuotedStatus() != null) {
+                text += "|" + status.getQuotedStatus().getText();
+            }
+            LOGGER.info(format("From: @%s Lang: %s Text: %s", status.getUser().getScreenName(), status.getLang(), text));
+            if (!TweetVerifier.shouldReply(text)) {
+                LOGGER.info("Shouldn't reply to this tweet");
+                return;
+            }
+            List<String> images = Arrays.stream(status.getMediaEntities())
+                    .filter(mediaEntity -> "photo".equals(mediaEntity.getType()))
+                    .map(MediaEntity::getMediaURL)
+                    .collect(Collectors.toList());
+            LOGGER.info(format("Contains images %s %n", images));
+            if (!images.isEmpty()) {
+                if (imageIdentifier.detectLandmarks(images)) {
+                    reply(status, statuses.get(status.getLang()).getNextText());
                 }
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
             LOGGER.warn("Error receiving status", e);
         }
-    }
-
-    private void verifyImages(List<String> images) {
-    }
-
-    private void reply(Status status) {
-        String msg = statuses.get(status.getLang()).getNextText();
-        LOGGER.info("REPLYING =====> " + msg);
-
     }
 }
