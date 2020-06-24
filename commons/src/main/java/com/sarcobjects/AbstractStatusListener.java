@@ -34,7 +34,7 @@ public abstract class AbstractStatusListener implements StatusListener {
         try {
             twitter.updateStatus(statusUpdate);
         } catch (TwitterException e) {
-            LOGGER.warn("Twitter exception", e);
+            LOGGER.warn("Twitter exception when trying to reply", e);
         }
     }
 

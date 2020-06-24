@@ -27,6 +27,7 @@ public class TowerBridge {
 
     private void start() throws IOException {
         TwitterStream twitterStream = TwitterStreamFactory.getSingleton();
+
         Twitter twitter = TwitterFactory.getSingleton();
 
         Map<String, CircularBuffer> statuses = Map.of(

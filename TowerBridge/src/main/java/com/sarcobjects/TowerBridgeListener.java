@@ -39,16 +39,18 @@ public class TowerBridgeListener extends AbstractStatusListener {
             if (status.getQuotedStatus() != null) {
                 text += "|" + status.getQuotedStatus().getText();
             }
-            LOGGER.info(format("From: @%s Lang: %s Text: %s", status.getUser().getScreenName(), status.getLang(), text));
+            LOGGER.info(format("FROM: @%s%n %s", status.getUser().getScreenName(), text));
             if (!TweetVerifier.shouldReply(text)) {
-                LOGGER.info("Shouldn't reply to this tweet");
+                LOGGER.info("NO REPLY");
                 return;
             }
             List<String> images = Arrays.stream(status.getMediaEntities())
                     .filter(mediaEntity -> "photo".equals(mediaEntity.getType()))
                     .map(MediaEntity::getMediaURL)
                     .collect(Collectors.toList());
-            LOGGER.info(format("Contains images %s %n", images));
+            if (images.isEmpty()) {
+                LOGGER.info(format("Contains images %s %n", images));
+            }
             if (!images.isEmpty()) {
                 if (imageIdentifier.detectLandmarks(images)) {
                     reply(status, statuses.get(status.getLang()).getNextText());

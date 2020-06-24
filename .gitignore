@@ -21,3 +21,6 @@
 # Maven
 log/
 target/
+
+# Twitter credentials
+**/twitter4j.properties
