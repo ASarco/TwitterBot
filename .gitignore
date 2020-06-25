@@ -24,3 +24,6 @@ target/
 
 # Twitter credentials
 **/twitter4j.properties
+
+# Google credentials
+TowerBridge/src/main/resources/towerbridge.json
