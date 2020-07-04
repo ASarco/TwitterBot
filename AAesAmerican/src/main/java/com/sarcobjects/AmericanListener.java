@@ -17,22 +17,26 @@ class AmericanListener extends AbstractStatusListener {
     static final String CATEGORY = "American";
 
     private final CircularBuffer statuses;
-    private final Categoriser categoriser;
+    //private final Categoriser categoriser;
 
     public AmericanListener(Twitter twitter, CircularBuffer statuses) throws IOException {
         super(twitter);
         this.statuses = statuses;
-        this.categoriser = new Categoriser("/es-doccat.bin");
+        //this.categoriser = new Categoriser("/es-doccat.bin");
     }
 
     @Override
     public void onStatus(Status status) {
 
         try {
+            //Do not respond to my own tweets
             if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
                 String text = status.getText();
                 if (status.getQuotedStatus() != null) {
                     text += "|" + status.getQuotedStatus().getText();
+                }
+                if (text.contains(CATEGORY)) { //if the text contains American, then they probably talking about the right thing.
+                    return;
                 }
                 String country = "Unknown";
                 if (nonNull(status.getPlace())) {
@@ -40,11 +44,9 @@ class AmericanListener extends AbstractStatusListener {
                 }
                 LOGGER.info(format("%n%nFrom: %s Country: %s Text: %s", status.getUser().getScreenName(),
                         country, "Unknown"), text);
-                //if (CATEGORY.equalsIgnoreCase(categoriser.categorise(text))) {
 
                 LOGGER.info("REPLYING =====>");
                 reply(status, statuses.getNextText());
-                //}
             }
         } catch (Exception e) {
             LOGGER.warn("Error receiving status", e);
