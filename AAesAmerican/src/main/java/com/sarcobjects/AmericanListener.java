@@ -32,18 +32,13 @@ class AmericanListener extends AbstractStatusListener {
             //Do not respond to my own tweets
             if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
                 String text = status.getText();
-                if (status.getQuotedStatus() != null) {
+                if (nonNull(status.getQuotedStatus())) {
                     text += "|" + status.getQuotedStatus().getText();
                 }
                 if (text.contains(CATEGORY)) { //if the text contains American, then they probably talking about the right thing.
                     return;
                 }
-                String country = "Unknown";
-                if (nonNull(status.getPlace())) {
-                    country = status.getPlace().getCountry();
-                }
-                LOGGER.info(format("%n%nFrom: %s Country: %s Text: %s", status.getUser().getScreenName(),
-                        country, "Unknown"), text);
+                LOGGER.info(format("%n%nFrom: %s ,Text: %s", status.getUser().getScreenName(), text));
 
                 LOGGER.info("REPLYING =====>");
                 reply(status, statuses.getNextText());
