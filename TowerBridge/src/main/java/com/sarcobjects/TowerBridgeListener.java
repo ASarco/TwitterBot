@@ -48,11 +48,9 @@ public class TowerBridgeListener extends AbstractStatusListener {
                     .filter(mediaEntity -> "photo".equals(mediaEntity.getType()))
                     .map(MediaEntity::getMediaURL)
                     .collect(Collectors.toList());
-            if (images.isEmpty()) {
-                LOGGER.info(format("Contains images %s %n", images));
-            }
             if (!images.isEmpty()) {
                 if (imageIdentifier.detectLandmarks(images)) {
+                    LOGGER.info(format("Contains images %s %n", images));
                     reply(status, statuses.get(status.getLang()).getNextText());
                 }
             }
