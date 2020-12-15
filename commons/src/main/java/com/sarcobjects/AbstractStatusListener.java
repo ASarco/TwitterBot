@@ -21,16 +21,16 @@ public abstract class AbstractStatusListener implements StatusListener {
         StringBuilder update = new StringBuilder(reply);
         update.append(" @").append(status.getUser().getScreenName());
 
-        UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
+/*        UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
         String mentions = Arrays.stream(userMentionEntities)
                 .map(UserMentionEntity::getScreenName)
                 .map(name -> "@" + name)
                 .collect(Collectors.joining(" ", " ", ""));
-        update.append(mentions);
+        update.append(mentions);*/
 
         StatusUpdate statusUpdate = new StatusUpdate(update.toString());
-        statusUpdate.autoPopulateReplyMetadata(true);
         statusUpdate.setInReplyToStatusId(status.getId());
+        statusUpdate.autoPopulateReplyMetadata(true);
         try {
             twitter.updateStatus(statusUpdate);
         } catch (TwitterException e) {
