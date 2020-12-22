@@ -34,11 +34,6 @@ public class AmericanListenerTest {
         User user = mock(User.class);
         when(user.getScreenName()).thenReturn("SomeName");
 
-        UserMentionEntity userMentionEntity = mock(UserMentionEntity.class);
-        when(userMentionEntity.getScreenName()).thenReturn("AnotherName");
-        UserMentionEntity[] userMentionEntities = {userMentionEntity};
-
-        when(status.getUserMentionEntities()).thenReturn(userMentionEntities);
         when(status.getInReplyToScreenName()).thenReturn(AmericanListener.MY_USER_NAME);
         when(status.getId()).thenReturn(424242L);
         when(status.getUser()).thenReturn(user);
@@ -49,7 +44,7 @@ public class AmericanListenerTest {
 
         assertThat(statusUpdate.getValue())
                 .extracting(StatusUpdate::getInReplyToStatusId, StatusUpdate::getStatus)
-                .contains(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName @AnotherName");
+                .contains(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName");
     }
 
     @Test
@@ -79,12 +74,12 @@ public class AmericanListenerTest {
         assertThat(statusUpdate.getAllValues())
                 .extracting(StatusUpdate::getInReplyToStatusId, StatusUpdate::getStatus)
                 .containsExactly(
-                        tuple(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName "),
-                        tuple(424242L, "AR es Aerolíneas Argentinas, AA es American Airlines @SomeName "),
-                        tuple(424242L, "American Airlines es AA, Aerolíneas Argentinas es AR @SomeName "),
-                        tuple(424242L, "Aerolíneas Argentinas es AR, American Airlines es AA @SomeName "),
-                        tuple(424242L, "Código de Aerolíneas Argentinas: AR, Código de American Airlines: AA @SomeName "),
-                        tuple(424242L, "Código de American Airlines: AA, Código de Aerolíneas Argentinas: AR @SomeName "),
-                        tuple(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName "));
+                        tuple(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName"),
+                        tuple(424242L, "AR es Aerolíneas Argentinas, AA es American Airlines @SomeName"),
+                        tuple(424242L, "American Airlines es AA, Aerolíneas Argentinas es AR @SomeName"),
+                        tuple(424242L, "Aerolíneas Argentinas es AR, American Airlines es AA @SomeName"),
+                        tuple(424242L, "Código de Aerolíneas Argentinas: AR, Código de American Airlines: AA @SomeName"),
+                        tuple(424242L, "Código de American Airlines: AA, Código de Aerolíneas Argentinas: AR @SomeName"),
+                        tuple(424242L, "AA es American Airlines, AR es Aerolíneas Argentinas @SomeName"));
     }
 }
