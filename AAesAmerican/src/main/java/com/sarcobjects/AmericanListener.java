@@ -32,6 +32,9 @@ class AmericanListener extends AbstractStatusListener {
             //Do not respond to my own tweets
             if (!MY_USER_NAME.equalsIgnoreCase(status.getUser().getScreenName()) && !status.isRetweet()) {
                 String text = status.getText();
+                if (!text.matches("AA(?i)")) {  //reply only if AA is in the main tweet
+                    return;
+                }
                 if (nonNull(status.getQuotedStatus())) {
                     text += "|" + status.getQuotedStatus().getText();
                 }
