@@ -2,9 +2,6 @@ package com.sarcobjects;
 
 import twitter4j.*;
 
-import java.util.Arrays;
-import java.util.stream.Collectors;
-
 public abstract class AbstractStatusListener implements StatusListener {
 
     private static final Logger LOGGER = Logger.getLogger(AbstractStatusListener.class);
@@ -12,23 +9,14 @@ public abstract class AbstractStatusListener implements StatusListener {
     final Twitter twitter;
 
 
-    public AbstractStatusListener(Twitter twitter) {
+    protected AbstractStatusListener(Twitter twitter) {
         this.twitter = twitter;
     }
 
     void reply(Status status, String reply) {
         LOGGER.info("Replying ====> " + reply);
-        StringBuilder update = new StringBuilder(reply);
-        update.append(" @").append(status.getUser().getScreenName());
 
-/*        UserMentionEntity[] userMentionEntities = status.getUserMentionEntities();
-        String mentions = Arrays.stream(userMentionEntities)
-                .map(UserMentionEntity::getScreenName)
-                .map(name -> "@" + name)
-                .collect(Collectors.joining(" ", " ", ""));
-        update.append(mentions);*/
-
-        StatusUpdate statusUpdate = new StatusUpdate(update.toString());
+        StatusUpdate statusUpdate = new StatusUpdate(reply + " @" + status.getUser().getScreenName());
         statusUpdate.setInReplyToStatusId(status.getId());
         statusUpdate.autoPopulateReplyMetadata(true);
         try {

@@ -4,8 +4,6 @@ import twitter4j.Logger;
 import twitter4j.Status;
 import twitter4j.Twitter;
 
-import java.io.IOException;
-
 import static java.lang.String.format;
 import static java.util.Objects.nonNull;
 
@@ -17,12 +15,10 @@ class AmericanListener extends AbstractStatusListener {
     static final String CATEGORY = "American";
 
     private final CircularBuffer statuses;
-    //private final Categoriser categoriser;
 
-    public AmericanListener(Twitter twitter, CircularBuffer statuses) throws IOException {
+    public AmericanListener(Twitter twitter, CircularBuffer statuses) {
         super(twitter);
         this.statuses = statuses;
-        //this.categoriser = new Categoriser("/es-doccat.bin");
     }
 
     @Override
@@ -38,7 +34,7 @@ class AmericanListener extends AbstractStatusListener {
                 if (nonNull(status.getQuotedStatus())) {
                     text += "|" + status.getQuotedStatus().getText();
                 }
-                if (text.contains(CATEGORY)) { //if the text contains American, then they probably talking about the right thing.
+                if (text.contains(CATEGORY)) { //if the text contains American, then they're probably talking about the right thing.
                     return;
                 }
                 LOGGER.info(format("%n%nFrom: %s ,Text: %s", status.getUser().getScreenName(), text));
