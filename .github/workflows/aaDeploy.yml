@@ -71,7 +71,7 @@ jobs:
     - name: Build Docker image with Dockerfile
       run: |
         mvn -B clean package -DskipTests=true -Drevision=${{ env.NOW }}
-        docker build --build-arg REVISION=${{ env.NOW }} -t asarco/aaesamerican .
+        docker build --build-arg REVISION=${{ env.NOW }} -t asarco/aaesamerican . -f /home/runner/work/TwitterBot/TwitterBot/AAesAmerican/Dockerfile
         docker tag asarco/aaesamerican ${{ env.docker_registry }}:${{ env.NOW }}
 
     - name: Publish Docker image
