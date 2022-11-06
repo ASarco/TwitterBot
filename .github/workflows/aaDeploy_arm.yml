@@ -80,4 +80,9 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         platforms: ${{ env.TARGET_PLATFORMS }}
+        build-args: |
+          "consumerKey=${{ secrets.AA_OAUTH_CONSUMERKEY }}"
+          "consumerSecret=${{ secrets.AA_OAUTH_CONSUMERSECRET }}"
+          "accessToken=${{ secrets.AA_OAUTH_ACCESTOKEN }}"
+          "accessTokenSecret=${{ secrets.AA_OAUTH_ACCESSTOKENSECRET }}"
 
