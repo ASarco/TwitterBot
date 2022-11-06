@@ -15,7 +15,7 @@ on:
 
 env:
   TARGET_PLATFORMS: linux/arm64
-  REGISTRY: ghcr.io
+  REGISTRY: asarco
   IMAGE_NAME: AAesAmerican
 
 jobs:
