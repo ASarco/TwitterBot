@@ -55,24 +55,21 @@ jobs:
 
     - name: Get current date
       id: date
-      run: | 
+      run: |
         echo "NOW=$(date +'%Y%m%dT%H%M%S')" >> $GITHUB_ENV
-        echo "docker_registry=${{ steps.login_docker.outputs.registry }}/asarco/aaesamerican" >> $GITHUB_ENV
-        
-    - name: Test with environment variables
-      run: echo $NOW
+        echo $NOW
 
     - name: Build Docker image with Dockerfile
       run: |
         mvn -B clean package -DskipTests -pl AAesAmerican,commons -Drevision=${{ env.NOW }}
         cd AAesAmerican
         docker build --build-arg REVISION=${{ env.NOW }} -t asarco/aaesamerican . 
-        docker tag asarco/aaesamerican ${{ env.docker_registry }}:${{ env.NOW }}
+        docker tag asarco/aaesamerican asarco/aaesamerican:${{ env.NOW }}
 
     - name: Publish Docker image
       id: publish
       run : |
-        docker push ${{ env.docker_registry }}:${{ env.NOW }}
+        docker push asarco/aaesamerican:${{ env.NOW }}
         echo "::set-output name=deployed::true"        
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
