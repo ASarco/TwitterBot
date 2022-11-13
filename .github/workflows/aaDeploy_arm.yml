@@ -14,7 +14,7 @@ on:
     branches: [ "master" ]
 
 env:
-  TARGET_PLATFORMS: linux/arm64
+  TARGET_PLATFORMS: linux/arm64, linux/amd64
   REGISTRY: asarco
   IMAGE_NAME: AAesAmerican
 
